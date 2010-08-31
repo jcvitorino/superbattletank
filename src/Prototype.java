@@ -36,6 +36,7 @@ public class Prototype extends Game {
 	SpriteGroup ENEMY_GROUP;
 
 	AnimatedSprite plane;
+	BufferedImage[] plane_left, plane_right, plane_down, plane_up;
 
 	Timer moveTimer; // to set enemy behaviour
 						// for moving left to right, right to left
@@ -90,11 +91,15 @@ public class Prototype extends Game {
 		playfield.setBackground(background);
 
 		// create our plane sprite
-		plane = new AnimatedSprite(getImages("resources/plane2.png", 3, 1),
+		plane = new AnimatedSprite(getImages("resources/tank_red.png", 1, 1),
 				287.5, 390);
-		plane.setAnimate(true);
-		plane.setLoopAnim(true);
-
+		plane.setAnimate(false);
+		plane.setLoopAnim(false);
+		
+		plane_left = getImages("resources/tank_red_left.png", 1, 1);
+		plane_right = getImages("resources/tank_red_right.png", 1, 1);
+		plane_down = getImages("resources/tank_red_down.png", 1, 1);
+		plane_up = getImages("resources/tank_red.png", 1, 1);
 		// ///// create the sprite group ///////
 		PLAYER_GROUP = new SpriteGroup("Player");
 		// no need to set the background for each group, we delegated it to
@@ -110,9 +115,9 @@ public class Prototype extends Game {
 
 		// ///// insert sprites into the sprite group ///////
 		PLAYER_GROUP.add(plane);
-
+		
 		// inserts sprites in rows to ENEMY_GROUP
-		BufferedImage image = getImage("resources/plane1.png");
+		BufferedImage image = getImage("resources/tank_enemy.png");
 		int startX = 10, startY = 30; // starting coordinate
 		for (int j = 0; j < 4; j++) { // 4 rows
 			for (int i = 0; i < 7; i++) { // 7 sprites in a row
@@ -168,27 +173,37 @@ public class Prototype extends Game {
 		double speedX = 0;
 		if (keyDown(KeyEvent.VK_LEFT)) {
 			speedX = -0.1;
-			try {
-				this.enviaMSGServidor("Esquerda");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			plane.setImages(plane_left);
+			
+//			try {
+//				this.enviaMSGServidor("Esquerda");
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		if (keyDown(KeyEvent.VK_RIGHT)) {
 			speedX = 0.1;
-			try {
-				this.enviaMSGServidor("Direita");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			plane.setImages(plane_right);
+			
+//			try {
+//				this.enviaMSGServidor("Direita");
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		double speedY = 0;
 		if (keyDown(KeyEvent.VK_UP)) {
 		speedY = -0.1;
+		
+		plane.setImages(plane_up);
+			
+		
 //		try {
-//			this.enviaMSGServidor("Direita");
+//			this.enviaMSGServidor("Cima");
 //		} catch (Exception e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -196,6 +211,15 @@ public class Prototype extends Game {
 	}
 		if (keyDown(KeyEvent.VK_DOWN)) {
 			speedY = 0.1;
+			
+			plane.setImages(plane_down);
+			
+//			try {
+//				this.enviaMSGServidor("Baixo");
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		plane.setHorizontalSpeed(speedX);
 		plane.setVerticalSpeed(speedY);
@@ -204,8 +228,23 @@ public class Prototype extends Game {
 		if (keyPressed(KeyEvent.VK_CONTROL)) {
 			// create projectile sprite
 			Sprite projectile = new Sprite(getImage("resources/projectile.png"));
-			projectile.setLocation(plane.getX() + 16.5, plane.getY() - 16);
-			projectile.setVerticalSpeed(-0.2);
+			
+			if (plane.getImages() == plane_up) { 
+				projectile.setLocation(plane.getX() +0, plane.getY() - 30);
+				projectile.setVerticalSpeed(-0.2);
+			}
+			else if ((plane.getImages() == plane_down)) {
+				projectile.setLocation(plane.getX() +0, plane.getY()+75);
+				projectile.setVerticalSpeed(0.2);
+			}
+			else if ((plane.getImages() == plane_left)) {
+				projectile.setLocation(plane.getX() -30, plane.getY());
+				projectile.setHorizontalSpeed(-0.2);
+			}
+			else if ((plane.getImages() == plane_right)) {
+				projectile.setLocation(plane.getX() +70, plane.getY());
+				projectile.setHorizontalSpeed(0.2);
+			}
 
 			// add it to PROJECTILE_GROUP
 			PROJECTILE_GROUP.add(projectile);
@@ -233,9 +272,9 @@ public class Prototype extends Game {
 		playfield.render(g);
 
 		// draw info text
-		font.drawString(g, "ARROW KEY : MOVE", 10, 10);
-		font.drawString(g, "CONTROL   : FIRE", 10, 30);
-		font.drawString(g, "ENTER     : TOGGLE PPC", 10, 50);
+//		font.drawString(g, "ARROW KEY : MOVE", 10, 10);
+//		font.drawString(g, "CONTROL   : FIRE", 10, 30);
+//		font.drawString(g, "ENTER     : TOGGLE PPC", 10, 50);
 
 		if (collision.pixelPerfectCollision) {
 			font.drawString(g, " USE PIXEL PERFECT COLLISION ", GameFont.RIGHT,
