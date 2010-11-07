@@ -227,21 +227,30 @@ public class Prototype extends Game {
 		// firing!!
 		if (keyPressed(KeyEvent.VK_CONTROL)) {
 			// create projectile sprite
-			Sprite projectile = new Sprite(getImage("resources/projectile.png"));
+			Sprite projectile = new Sprite(getImage("resources/projectile_up.png"));
+			BufferedImage projectile_up = getImage("resources/projectile_up.png");
+			BufferedImage projectile_down = getImage("resources/projectile_down.png");
+			BufferedImage projectile_left = getImage("resources/projectile_left.png");
+			BufferedImage projectile_right = getImage("resources/projectile_right.png");
+			
 			
 			if (plane.getImages() == plane_up) { 
+				projectile.setImage(projectile_up);
 				projectile.setLocation(plane.getX() +0, plane.getY() - 30);
 				projectile.setVerticalSpeed(-0.2);
 			}
 			else if ((plane.getImages() == plane_down)) {
+				projectile.setImage(projectile_down);
 				projectile.setLocation(plane.getX() +0, plane.getY()+75);
 				projectile.setVerticalSpeed(0.2);
 			}
 			else if ((plane.getImages() == plane_left)) {
+				projectile.setImage(projectile_left);
 				projectile.setLocation(plane.getX() -30, plane.getY());
 				projectile.setHorizontalSpeed(-0.2);
 			}
 			else if ((plane.getImages() == plane_right)) {
+				projectile.setImage(projectile_right);
 				projectile.setLocation(plane.getX() +70, plane.getY());
 				projectile.setHorizontalSpeed(0.2);
 			}
